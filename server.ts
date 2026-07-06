@@ -28,6 +28,27 @@ function getGeminiClient(): GoogleGenAI {
   return aiClient;
 }
 
+async function generateContentWithFallback(ai: GoogleGenAI, params: any) {
+  const models = ["gemini-3.5-flash", "gemini-3.1-flash-lite", "gemini-flash-latest"];
+  let lastError: any = null;
+
+  for (const model of models) {
+    try {
+      console.log(`[Gemini SDK] Trying model: ${model}`);
+      const response = await ai.models.generateContent({
+        ...params,
+        model: model,
+      });
+      console.log(`[Gemini SDK] Success with model: ${model}`);
+      return response;
+    } catch (err: any) {
+      console.error(`[Gemini SDK] Error with model ${model}:`, err.message || err);
+      lastError = err;
+    }
+  }
+  throw lastError;
+}
+
 async function startServer() {
   const app = express();
   app.use(express.json({ limit: '15mb' }));
@@ -163,8 +184,7 @@ async function startServer() {
           contents.push({ text: promptText + `\n\n[분석할 세일즈 데이터 또는 리포트 본문]:\n${text}` });
         }
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+        const response = await generateContentWithFallback(ai, {
           contents: contents,
           config: {
             responseMimeType: "application/json",
@@ -760,8 +780,7 @@ Sam님, 이번 롤플레잉에서 이행하신 세일즈 컴플라이언스 준�
           parts: [{ text: m.content }]
         }));
 
-        const response = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+        const response = await generateContentWithFallback(ai, {
           contents: contents,
           config: {
             systemInstruction: selectedInstruction,
