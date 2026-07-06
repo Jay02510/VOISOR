@@ -16,6 +16,7 @@ import {
   ArrowLeft, 
   Check
 } from 'lucide-react';
+import ReportPanel from './components/ReportPanel';
 
 // Specialized default report for Sam, compliant with VOTEST / Sam's schema
 const samReportLocal: VotestReport = {
@@ -90,6 +91,7 @@ export default function App() {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [currentView, setCurrentView] = useState<'CANDIDATE' | 'MANAGER'>('CANDIDATE');
   const [selectedReport, setSelectedReport] = useState<VotestReport | null>(null);
+  const [showReport, setShowReport] = useState(false);
   
   // Custom upload states
   const [uploadText, setUploadText] = useState('');
@@ -346,6 +348,7 @@ export default function App() {
     setSelectedFileBase64('');
     setSelectedFileMime('');
     setUploadError('');
+    setShowReport(false);
     
     const timeString = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
     setMessages([
@@ -479,7 +482,7 @@ export default function App() {
           <button
             id="header-restart-btn"
             onClick={handleRestart}
-            className="px-3 py-1.5 rounded-lg border border-zinc-800 text-xs text-zinc-400 hover:text-white hover:bg-zinc-900/80 transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-1.5 rounded-lg border border-zinc-800 text-xs text-zinc-400 hover:text-white hover:bg-zinc-900/80 transition-all active:scale-[0.97] flex items-center gap-1.5 cursor-pointer"
           >
             <ArrowLeft className="h-3 w-3" />
             초기화면으로
@@ -491,7 +494,7 @@ export default function App() {
       <main className="flex-1 w-full max-w-4xl mx-auto px-4 py-6 flex flex-col items-center justify-center relative z-10 overflow-hidden">
         
         {/* Sleek, premium unified chatbot container */}
-        <div className="w-full h-[78vh] rounded-2xl bg-zinc-900/45 border border-zinc-800/80 backdrop-blur-xl shadow-2xl flex flex-col overflow-hidden relative">
+        <div className="w-full h-[78vh] rounded-2xl bg-zinc-900/45 border border-zinc-800/80 backdrop-blur-xl flex flex-col overflow-hidden relative">
           
           {/* Elevated Chat Header (Adapts dynamically) */}
           <div className="px-6 py-4 border-b border-zinc-800/60 bg-zinc-950/40 flex items-center justify-between shrink-0 select-none">
@@ -531,9 +534,17 @@ export default function App() {
             <div className="flex items-center gap-2">
               {step === 3 && (
                 <>
-                  <span className="text-[10.5px] font-extrabold px-2.5 py-1 rounded-lg bg-zinc-850/80 border border-zinc-800 text-white select-none">
+                  <button
+                    id="open-report-panel-btn"
+                    onClick={() => {
+                      if (step === 3 && selectedReport) {
+                        setShowReport(true);
+                      }
+                    }}
+                    className="text-[10.5px] font-extrabold px-2.5 py-1 rounded-lg bg-zinc-850/80 border border-zinc-800 text-white select-none hover:bg-zinc-800 hover:text-blue-400 transition-all active:scale-[0.97] cursor-pointer motion-safe:animate-fade-in"
+                  >
                     종합 점수: {selectedReport?.overallScore || 81}점
-                  </span>
+                  </button>
                   
                   <button
                     id="back-to-upload-btn"
@@ -549,7 +560,7 @@ export default function App() {
                         }
                       ]);
                     }}
-                    className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white rounded-lg text-xs font-semibold transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-3 py-1 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 hover:border-zinc-700 text-zinc-400 hover:text-white rounded-lg text-xs font-semibold transition-all active:scale-[0.97] flex items-center gap-1 cursor-pointer"
                   >
                     리포트 교체
                   </button>
@@ -569,7 +580,7 @@ export default function App() {
                       }
                     ]);
                   }}
-                  className="px-3 py-1.5 rounded-lg border border-zinc-800 text-xs text-zinc-400 hover:text-white hover:bg-zinc-900/80 transition-all flex items-center gap-1.5 cursor-pointer"
+                  className="px-3 py-1.5 rounded-lg border border-zinc-800 text-xs text-zinc-400 hover:text-white hover:bg-zinc-900/80 transition-all active:scale-[0.97] flex items-center gap-1.5 cursor-pointer"
                 >
                   <ArrowLeft className="h-3 w-3" />
                   역할 다시 선택
@@ -590,10 +601,10 @@ export default function App() {
               return (
                 <div 
                   key={index} 
-                  className={`flex flex-col max-w-[85%] ${isModel ? 'self-start' : 'self-end ml-auto'} animate-fade-in`}
+                  className={`flex flex-col max-w-[85%] ${isModel ? 'self-start' : 'self-end ml-auto'} motion-safe:animate-fade-in`}
                 >
                   <span className={`text-[9.5px] font-bold uppercase tracking-wider mb-1 ${
-                    isModel ? 'text-zinc-500' : 'text-blue-400 self-end'
+                    isModel ? 'text-zinc-400' : 'text-blue-400 self-end'
                   }`}>
                     {roleLabel}
                   </span>
@@ -614,7 +625,7 @@ export default function App() {
                     )}
                   </div>
 
-                  <span className={`text-[8.5px] mt-1 font-mono text-zinc-500 ${!isModel && 'self-end'}`}>
+                  <span className={`text-[8.5px] mt-1 font-mono text-zinc-400 ${!isModel && 'self-end'}`}>
                     {msg.time}
                   </span>
                 </div>
@@ -623,7 +634,7 @@ export default function App() {
 
             {/* Render Role Selection interactive buttons directly in the feed */}
             {step === 1 && (
-              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl mt-4 animate-fade-in self-start">
+              <div className="flex flex-col sm:flex-row gap-4 w-full max-w-2xl mt-4 motion-safe:animate-fade-in self-start">
                 {/* Candidate Mode */}
                 <button
                   id="select-candidate-mode"
@@ -645,7 +656,7 @@ export default function App() {
                     ]);
                     setStep(2);
                   }}
-                  className="flex-1 text-left p-5 rounded-2xl bg-zinc-950/60 hover:bg-zinc-950/90 border border-zinc-850 hover:border-zinc-700/80 transition-all flex flex-col justify-between group cursor-pointer shadow-lg"
+                  className="flex-1 text-left p-5 rounded-2xl bg-zinc-950/60 hover:bg-zinc-950/90 border border-zinc-850 hover:border-zinc-700/80 transition-all active:scale-[0.98] flex flex-col justify-between group cursor-pointer shadow-lg"
                 >
                   <div className="flex flex-col gap-3">
                     <div className="h-9 w-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:scale-105 transition-all">
@@ -654,12 +665,12 @@ export default function App() {
                     <div>
                       <h3 className="font-extrabold text-sm text-white group-hover:text-blue-300 transition-colors">Candidate Mode</h3>
                       <p className="text-[11px] text-zinc-400 font-medium mt-1 leading-relaxed">
-                        Interactive post-test coaching. Review individual sales metrics, compliance elements, and practice targeted roleplay scenarios.
+                        VOTEST 응시 후 개인별 세일즈 지표와 컴플라이언스 항목을 검토하고, 맞춤형 롤플레잉 훈련을 진행합니다.
                       </p>
                     </div>
                   </div>
                   <div className="mt-4 py-2 w-full rounded-lg text-xs font-bold text-center bg-zinc-900 border border-zinc-800 text-zinc-300 group-hover:bg-[#0052cc] group-hover:text-white group-hover:border-[#0052cc] transition-all flex items-center justify-center gap-1.5 shadow-sm">
-                    <span>Select and Continue</span>
+                    <span>선택하고 계속하기</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
                 </button>
@@ -685,7 +696,7 @@ export default function App() {
                     ]);
                     setStep(2);
                   }}
-                  className="flex-1 text-left p-5 rounded-2xl bg-zinc-950/60 hover:bg-zinc-950/90 border border-zinc-850 hover:border-zinc-700/80 transition-all flex flex-col justify-between group cursor-pointer shadow-lg"
+                  className="flex-1 text-left p-5 rounded-2xl bg-zinc-950/60 hover:bg-zinc-950/90 border border-zinc-850 hover:border-zinc-700/80 transition-all active:scale-[0.98] flex flex-col justify-between group cursor-pointer shadow-lg"
                 >
                   <div className="flex flex-col gap-3">
                     <div className="h-9 w-9 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:scale-105 transition-all">
@@ -694,12 +705,12 @@ export default function App() {
                     <div>
                       <h3 className="font-extrabold text-sm text-white group-hover:text-blue-300 transition-colors">Manager Mode</h3>
                       <p className="text-[11px] text-zinc-400 font-medium mt-1 leading-relaxed">
-                        Enterprise risk and audit dashboard. Evaluate candidate competency benchmarks, compliance gaps, and team intervention guides.
+                        지원자의 역량 벤치마크와 컴플라이언스 격차를 평가하고, 팀 개입 가이드를 제공하는 기업용 리스크·감사 대시보드입니다.
                       </p>
                     </div>
                   </div>
                   <div className="mt-4 py-2 w-full rounded-lg text-xs font-bold text-center bg-zinc-900 border border-zinc-800 text-zinc-300 group-hover:bg-[#0052cc] group-hover:text-white group-hover:border-[#0052cc] transition-all flex items-center justify-center gap-1.5 shadow-sm">
-                    <span>Select and Continue</span>
+                    <span>선택하고 계속하기</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
                 </button>
@@ -708,7 +719,7 @@ export default function App() {
 
             {/* Render Direct File Upload inside the feed */}
             {step === 2 && (
-              <div className="p-5 rounded-2xl bg-zinc-950/80 border border-zinc-850 flex flex-col gap-4 max-w-md mt-2 self-start animate-fade-in shadow-xl">
+              <div className="p-5 rounded-2xl bg-zinc-950/80 border border-zinc-850 flex flex-col gap-4 max-w-md mt-2 self-start motion-safe:animate-fade-in">
                 <div 
                   onDragEnter={handleDrag}
                   onDragLeave={handleDrag}
@@ -722,7 +733,7 @@ export default function App() {
                 >
                   <Upload className="h-5 w-5 text-zinc-400 mx-auto mb-2" />
                   <p className="text-xs font-bold text-white">VOTEST 평가서 PDF 드래그 앤 드롭</p>
-                  <p className="text-[10px] text-zinc-500 mt-1">또는 컴퓨터에서 파일 선택</p>
+                  <p className="text-[10px] text-zinc-400 mt-1">또는 컴퓨터에서 파일 선택</p>
                   
                   <input 
                     id="file-upload-input-inline"
@@ -735,7 +746,7 @@ export default function App() {
                   <button
                     id="file-browse-btn-inline"
                     onClick={() => document.getElementById('file-upload-input-inline')?.click()}
-                    className="mt-3 px-3 py-1.5 rounded-lg text-[11px] font-bold border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-850 hover:text-white transition-all cursor-pointer"
+                    className="mt-3 px-3 py-1.5 rounded-lg text-[11px] font-bold border border-zinc-800 bg-zinc-900 text-zinc-300 hover:bg-zinc-850 hover:text-white transition-all active:scale-[0.97] cursor-pointer"
                   >
                     파일 선택하기
                   </button>
@@ -770,7 +781,7 @@ export default function App() {
                     id="run-analysis-btn-inline"
                     onClick={handleRunAnalysis}
                     disabled={isAnalyzing}
-                    className="flex-1 px-3 py-2 rounded-lg text-xs font-bold bg-[#0052cc] hover:bg-[#004bb3] text-white disabled:opacity-40 disabled:pointer-events-none transition-all flex items-center justify-center gap-1 shadow-lg shadow-blue-500/10 cursor-pointer"
+                    className="flex-1 px-3 py-2 rounded-lg text-xs font-bold bg-[#0052cc] hover:bg-[#004bb3] text-white disabled:opacity-40 disabled:pointer-events-none transition-all active:scale-[0.97] flex items-center justify-center gap-1 shadow-lg shadow-blue-500/10 cursor-pointer"
                   >
                     {isAnalyzing ? (
                       <>
@@ -789,7 +800,7 @@ export default function App() {
                     id="use-demo-report-btn"
                     onClick={handleUseDemoReport}
                     disabled={isAnalyzing}
-                    className="px-3 py-2 rounded-lg text-xs font-bold bg-zinc-800 hover:bg-zinc-750 text-zinc-300 transition-all cursor-pointer flex items-center justify-center gap-1 border border-zinc-750"
+                    className="px-3 py-2 rounded-lg text-xs font-bold bg-zinc-800 hover:bg-zinc-750 text-zinc-300 transition-all active:scale-[0.97] cursor-pointer flex items-center justify-center gap-1 border border-zinc-750"
                   >
                     <span>데모 리포트로 시작</span>
                   </button>
@@ -799,7 +810,7 @@ export default function App() {
 
             {chatLoading && (
               <div className="self-start flex flex-col max-w-[80%] w-full animate-pulse">
-                <span className="text-[9.5px] font-bold uppercase tracking-wider text-zinc-500 mb-1">
+                <span className="text-[9.5px] font-bold uppercase tracking-wider text-zinc-400 mb-1">
                   {step === 3 ? (currentView === 'CANDIDATE' ? 'VOISOR 코칭 어드바이저' : 'VOISOR 리스크 분석 리더') : 'VOISOR AI'}
                 </span>
                 <div className="bg-zinc-950/85 border border-zinc-850 p-4 rounded-2xl rounded-tl-none flex flex-col gap-2">
@@ -822,7 +833,7 @@ export default function App() {
           {step === 3 && !chatLoading && messages.length > 0 && (
             <div className="px-6 py-3.5 border-t border-zinc-800/40 shrink-0 flex flex-col gap-2 bg-zinc-950/20 backdrop-blur-sm z-10">
               <div className="flex items-center">
-                <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest flex items-center gap-1.5">
+                <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-1.5">
                   <FileText className="h-3.5 w-3.5 text-blue-500" />
                   추천 분석 질문 (VOISOR Recommended Analytics)
                 </span>
@@ -835,10 +846,10 @@ export default function App() {
                     key={index}
                     onClick={() => handleSendMessage(qa.label, qa.prompt)}
                     disabled={chatLoading}
-                    className="shrink-0 text-[11px] px-3.5 py-1.5 bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-[#0052cc]/10 hover:text-white text-zinc-300 font-semibold rounded-full transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none hover:bg-zinc-850"
+                    className="shrink-0 text-[11px] px-3.5 py-1.5 bg-zinc-900 border border-zinc-800 hover:border-blue-500 hover:bg-[#0052cc]/10 hover:text-white text-zinc-300 font-semibold rounded-full transition-all active:scale-[0.97] flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:pointer-events-none hover:bg-zinc-850"
                   >
                     <span>{qa.label}</span>
-                    <span className="text-[9px] text-zinc-500 font-bold">&rarr;</span>
+                    <span className="text-[9px] text-zinc-400 font-bold">&rarr;</span>
                   </button>
                 ))}
               </div>
@@ -860,14 +871,14 @@ export default function App() {
                     : "관리자 보고서 작성 방향이나 피드백 조치에 대해 기재해 주세요..."
                 }
                 disabled={chatLoading}
-                className="flex-1 px-6 py-4 bg-transparent text-zinc-100 placeholder-zinc-500 text-xs border-none outline-none focus:ring-0 focus:outline-none disabled:cursor-not-allowed font-sans"
+                className="flex-1 px-6 py-4 bg-transparent text-zinc-100 placeholder-zinc-400 text-xs border-none outline-none focus:ring-0 focus:outline-none disabled:cursor-not-allowed font-sans"
               />
               
               <button
                 id="send-chat-button"
                 onClick={() => handleSendMessage()}
                 disabled={!chatInput.trim() || chatLoading}
-                className="h-[52px] w-[52px] border-l border-zinc-850/60 bg-transparent hover:bg-blue-500/5 text-zinc-400 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all flex items-center justify-center font-bold"
+                className="h-[52px] w-[52px] border-l border-zinc-850/60 bg-transparent hover:bg-blue-500/10 text-zinc-300 hover:text-white disabled:opacity-30 disabled:pointer-events-none transition-all active:scale-[0.97] flex items-center justify-center font-bold"
               >
                 <Send className="h-4 w-4 text-blue-500" />
               </button>
@@ -877,13 +888,21 @@ export default function App() {
               className="border-t border-zinc-800/60 p-4 bg-zinc-950 flex items-center justify-center select-none cursor-pointer hover:bg-zinc-900/20 transition-all gap-2 text-xs font-semibold text-zinc-400"
               onClick={() => document.getElementById('file-upload-input-inline')?.click()}
             >
-              <Upload className="h-4 w-4 text-blue-500 animate-bounce" />
+              <Upload className="h-4 w-4 text-blue-500 motion-safe:animate-float" />
               <span>드래그앤드롭하여 PDF 업로드 또는 여기를 클릭하여 파일 선택</span>
             </div>
           ) : (
-            <div className="border-t border-zinc-800/60 p-4 bg-zinc-950 flex items-center justify-center text-xs font-semibold text-zinc-500">
+            <div className="border-t border-zinc-800/60 p-4 bg-zinc-950 flex items-center justify-center text-xs font-semibold text-zinc-400">
               상단의 역할(Mode) 카드를 선택하시면 대화가 실시간으로 시작됩니다.
             </div>
+          )}
+
+          {showReport && selectedReport && (
+            <ReportPanel 
+              report={selectedReport} 
+              view={currentView} 
+              onClose={() => setShowReport(false)} 
+            />
           )}
 
         </div>
@@ -891,7 +910,7 @@ export default function App() {
       </main>
 
       {/* Aesthetic Footer */}
-      <footer className="w-full max-w-7xl mx-auto px-6 h-12 flex items-center justify-center border-t border-zinc-900/40 text-[10px] text-zinc-600 font-semibold uppercase tracking-widest shrink-0">
+      <footer className="w-full max-w-7xl mx-auto px-6 h-12 flex items-center justify-center border-t border-zinc-900/40 text-[10px] text-zinc-400 font-semibold uppercase tracking-widest shrink-0">
         &copy; 2026 VodaBi. All rights reserved.
       </footer>
 

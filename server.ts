@@ -40,13 +40,12 @@ async function startServer() {
       // Robust extraction function that matches VODABI-TMR (Golden Template) format and returns perfectly mapped data
       const lowercaseFileName = (fileName || '').toLowerCase();
       const lowercaseText = (text || '').toLowerCase();
-      const isVotextOrGoldenPdf = lowercaseFileName.includes('votest') || 
-                                   lowercaseFileName.includes('golden') || 
-                                   lowercaseFileName.includes('template') || 
-                                   lowercaseFileName.includes('sam') || 
-                                   fileMime === 'application/pdf' || 
-                                   lowercaseText.includes('sam') || 
-                                   lowercaseText.includes('vodabi-tmr');
+      // Only treat it as the hardcoded Golden/Sam demo template if specifically requested or if it matches the specific sample profile
+      const isVotextOrGoldenPdf = lowercaseFileName.includes('votest-sam') || 
+                                   lowercaseFileName === 'votest_sam_report.pdf' ||
+                                   (lowercaseFileName.includes('votest') && lowercaseFileName.includes('sam')) ||
+                                   lowercaseText.includes('vodabi-tmr-golden') ||
+                                   (lowercaseText.includes('sam (id:') && lowercaseText.includes('tm-2026-0149'));
 
       if (isVotextOrGoldenPdf) {
         const goldenTemplateData = {
