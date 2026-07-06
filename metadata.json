@@ -1,0 +1,6 @@
+{
+  "name": "VOISOR - Enterprise Sales Coaching AI",
+  "description": "VodaBi's premium enterprise sales coaching AI analyzing VOTEST evaluation reports for candidates and managers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
