@@ -16,7 +16,9 @@ import {
   ArrowLeft, 
   Check,
   Sun,
-  Moon
+  Moon,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 import ReportPanel from './components/ReportPanel';
 
@@ -120,6 +122,14 @@ export default function App() {
   const [chatLoading, setChatLoading] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chipsScrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollChips = (direction: 'left' | 'right') => {
+    if (chipsScrollRef.current) {
+      const scrollAmount = direction === 'left' ? -250 : 250;
+      chipsScrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   // Scroll to bottom when messages change
   useEffect(() => {
@@ -927,16 +937,49 @@ export default function App() {
             <div className={`px-6 py-3.5 border-t shrink-0 flex flex-col gap-2 backdrop-blur-sm z-10 ${
               darkMode ? 'border-zinc-800/40 bg-zinc-950/20' : 'border-zinc-200 bg-zinc-50/60'
             }`}>
-              <div className="flex items-center">
+              <div className="flex items-center justify-between w-full">
                 <span className={`text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 ${
                   darkMode ? 'text-zinc-400' : 'text-zinc-500'
                 }`}>
                   <FileText className="h-3.5 w-3.5 text-blue-500" />
                   추천 분석 질문 (VOISOR Recommended Analytics)
                 </span>
+                
+                {/* Horizontal Scrolling Navigation Buttons */}
+                <div className="flex items-center gap-1.5">
+                  <button
+                    onClick={() => handleScrollChips('left')}
+                    className={`p-1 rounded-md border text-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
+                      darkMode
+                        ? 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800'
+                        : 'border-zinc-200 bg-white text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 shadow-2xs'
+                    }`}
+                    title="이전 추천 질문"
+                  >
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleScrollChips('right')}
+                    className={`p-1 rounded-md border text-xs transition-all active:scale-95 cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950 ${
+                      darkMode
+                        ? 'border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-white hover:bg-zinc-800'
+                        : 'border-zinc-200 bg-white text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 shadow-2xs'
+                    }`}
+                    title="다음 추천 질문"
+                  >
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
 
-              <div className="flex items-center gap-2 overflow-x-auto py-1 scrollbar-none">
+              <div 
+                ref={chipsScrollRef}
+                className={`flex items-center gap-2 overflow-x-auto py-1.5 scrollbar-thin ${
+                  darkMode 
+                    ? 'scrollbar-thumb-zinc-800 scrollbar-track-transparent' 
+                    : 'scrollbar-thumb-zinc-300 scrollbar-track-transparent'
+                }`}
+              >
                 {customChips[currentView].map((qa, index) => (
                   <button
                     id={`quick-action-${index}`}
