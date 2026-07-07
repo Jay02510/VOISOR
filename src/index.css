@@ -71,3 +71,10 @@
     @apply antialiased font-sans bg-zinc-950 text-zinc-100 selection:bg-[#0052cc]/30 selection:text-white transition-colors duration-300;
   }
 }
+
+.scrollbar-none {
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}

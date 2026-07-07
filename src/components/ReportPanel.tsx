@@ -72,7 +72,7 @@ export default function ReportPanel({ report, view, onClose, darkMode = true }: 
       {/* Dark Backdrop Overlay */}
       <div 
         onClick={handleCloseClick}
-        className={`absolute inset-0 bg-zinc-950/70 backdrop-blur-xs transition-opacity duration-300 ${
+        className={`absolute inset-0 bg-zinc-950/70 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? 'opacity-100' : 'opacity-0'
         }`}
       />
@@ -81,8 +81,8 @@ export default function ReportPanel({ report, view, onClose, darkMode = true }: 
       <div 
         className={`relative w-full max-w-md md:max-w-lg h-full ${
           darkMode ? 'bg-zinc-950 border-zinc-800/80 text-white' : 'bg-white border-zinc-200 text-zinc-800'
-        } border-l flex flex-col shadow-[-12px_0_32px_rgba(0,0,0,0.35)] z-10 transform transition-all duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
-          isOpen ? 'translate-x-0 opacity-100 motion-safe:animate-slide-in-right' : 'translate-x-full opacity-0'
+        } border-l flex flex-col shadow-[-12px_0_32px_rgba(0,0,0,0.35)] z-10 transform transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+          isOpen ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
         }`}
       >
         {/* Panel Header */}
@@ -107,7 +107,7 @@ export default function ReportPanel({ report, view, onClose, darkMode = true }: 
 
         {/* Panel Scrollable Body */}
         <div className={`flex-1 overflow-y-auto p-6 space-y-6 scrollbar-thin ${
-          darkMode ? 'scrollbar-thumb-zinc-850' : 'scrollbar-thumb-zinc-200'
+          darkMode ? 'scrollbar-thumb-zinc-800' : 'scrollbar-thumb-zinc-200'
         } scrollbar-track-transparent`}>
           
           {/* Section 1: Overall Score Circle Gauge */}
@@ -120,7 +120,7 @@ export default function ReportPanel({ report, view, onClose, darkMode = true }: 
                   cx="48"
                   cy="48"
                   r={radius}
-                  className={darkMode ? "stroke-zinc-850" : "stroke-zinc-150"}
+                  className={darkMode ? "stroke-zinc-800" : "stroke-zinc-150"}
                   strokeWidth="7"
                   fill="transparent"
                 />
