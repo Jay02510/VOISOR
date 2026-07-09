@@ -1419,7 +1419,7 @@ export default function App() {
           }}
           className={`h-14 w-14 rounded-full flex items-center justify-center transition-all duration-300 cursor-pointer shadow-2xl hover:scale-105 active:scale-95 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/50 relative ${
             isChatOpen 
-              ? 'bg-zinc-900 text-white border border-zinc-800' 
+              ? 'bg-slate-900 text-white shadow-lg border-0' 
               : 'bg-[#0052cc] hover:bg-[#004bb3] text-white shadow-[#0052cc]/30'
           }`}
           title={isChatOpen ? "코칭 어시스턴트 닫기" : "VOISOR AI 세일즈 코칭 시작"}
@@ -1841,7 +1841,7 @@ export default function App() {
                         ? 'bg-[#0052cc] border-[#0052cc] text-white font-extrabold shadow-xs'
                         : darkMode
                           ? 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'
-                          : 'bg-white border-zinc-200 text-zinc-600 hover:text-zinc-800'
+                          : 'bg-white border-gray-300 text-zinc-600 hover:text-zinc-800 hover:bg-gray-50'
                     }`}
                   >
                     {cat}
@@ -1872,7 +1872,7 @@ export default function App() {
                     className={`shrink-0 text-[10px] px-3 py-1 border transition-all active:scale-[0.97] flex items-center gap-1 cursor-pointer disabled:opacity-40 rounded-full font-bold ${
                       darkMode 
                         ? 'bg-zinc-900 border-zinc-800 text-zinc-300 hover:bg-[#0052cc]/10 hover:text-white hover:border-blue-500' 
-                        : 'bg-white border-zinc-200 text-zinc-700 hover:bg-blue-50 hover:text-[#0052cc] hover:border-blue-300'
+                        : 'bg-white border-gray-300 text-zinc-700 hover:bg-gray-50 hover:text-zinc-900 hover:border-gray-400'
                     }`}
                   >
                     <span>{qa.label}</span>
